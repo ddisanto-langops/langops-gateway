@@ -1,0 +1,1 @@
+export const langopsApiBasePath = "api.pcglangops.com/api/v1"

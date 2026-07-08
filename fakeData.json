@@ -1,0 +1,182 @@
+{
+  "model": {
+    "id": "5176af831f22073e1e0012e3",
+    "name": "LangOps",
+    "desc": "",
+    "descData": "None",
+    "closed": false,
+    "idOrganization": "515c52a01071a6096b000680",
+    "idEnterprise": "None",
+    "pinned": false,
+    "url": "https://trello.com/b/HJFtfyOC/langops",
+    "shortUrl": "https://trello.com/b/HJFtfyOC",
+    "prefs": {
+      "permissionLevel": "org",
+      "hideVotes": false,
+      "voting": "disabled",
+      "comments": "members",
+      "invitations": "admins",
+      "selfJoin": false,
+      "cardCovers": true,
+      "showCompleteStatus": true,
+      "cardCounts": false,
+      "isTemplate": false,
+      "calendarFeedEnabled": true,
+      "hiddenPluginBoardButtons": [
+        "5d408675aa4ba76abafabfc1",
+        "60e068efb294647187bbe4f5"
+      ],
+      "switcherViews": [
+        {
+          "viewType": "Board",
+          "enabled": true
+        },
+        {
+          "viewType": "Table",
+          "enabled": false
+        },
+        {
+          "viewType": "Calendar",
+          "enabled": true
+        },
+        {
+          "viewType": "Dashboard",
+          "enabled": true
+        },
+        {
+          "viewType": "Timeline",
+          "enabled": true
+        },
+        {
+          "viewType": "Map",
+          "enabled": false
+        }
+      ],
+      "autoArchive": "None",
+      "background": "blue",
+      "backgroundColor": "#0079BF",
+      "backgroundDarkColor": "None",
+      "backgroundImage": "None",
+      "backgroundDarkImage": "None",
+      "backgroundImageScaled": "None",
+      "backgroundTile": false,
+      "backgroundBrightness": "dark",
+      "sharedSourceUrl": "None",
+      "backgroundBottomColor": "#0079BF",
+      "backgroundTopColor": "#0079BF",
+      "canBePublic": true,
+      "canBeEnterprise": true,
+      "canBeOrg": true,
+      "canBePrivate": true,
+      "canInvite": true
+    },
+    "labelNames": {
+      "green": "Timed/Continuous Tasks",
+      "yellow": "VIDEO",
+      "orange": "GERMAN",
+      "red": "Urgent",
+      "purple": "",
+      "blue": "SPANISH",
+      "sky": "HEBREW",
+      "lime": "WEB ARTICLE",
+      "pink": "PODCAST",
+      "black": "Member Pack",
+      "green_dark": "Italiano",
+      "yellow_dark": "messages.pcog.org",
+      "orange_dark": "",
+      "red_dark": "MAG ARTICLE",
+      "purple_dark": "ITALIAN",
+      "blue_dark": "KOD",
+      "sky_dark": "",
+      "lime_dark": "DUTCH",
+      "pink_dark": "LITERATURE",
+      "black_dark": "MARKETING",
+      "green_light": "AFRIKAANS",
+      "yellow_light": "",
+      "orange_light": "",
+      "red_light": "",
+      "purple_light": "FRENCH",
+      "blue_light": "",
+      "sky_light": "",
+      "lime_light": "",
+      "pink_light": "Training",
+      "black_light": ""
+    }
+  },
+  "action": {
+    "id": "6a4ea9607242be1186a94198",
+    "idMemberCreator": "68278b84ccf8dea810949333",
+    "data": {
+      "old": {
+        "pos": 114688
+      },
+      "card": {
+        "pos": 140737487863808,
+        "id": "6a4d2405e660574bf08d2ceb",
+        "name": "MB_July-7-2026-Is-Hamas-finally-surrendering-STAFF324_EN-FR",
+        "idShort": 24219,
+        "shortLink": "3L2hkTkG"
+      },
+      "board": {
+        "id": "5176af831f22073e1e0012e3",
+        "name": "LangOps",
+        "shortLink": "HJFtfyOC"
+      },
+      "list": {
+        "id": "65a5208fb3d3c76ad4cd208a",
+        "name": "Social Media Post",
+        "color": "green"
+      }
+    },
+    "agenticIdentity": "None",
+    "appCreator": {
+      "id": "56ff07afbc287582d36e19ac",
+      "name": "Automation",
+      "icon": {
+        "url": "https://app.butlerfortrello.com/assets/icon-butler-bot.png"
+      }
+    },
+    "type": "updateCard",
+    "date": "2026-07-08T19:47:44.922Z",
+    "limits": "None",
+    "display": {
+      "translationKey": "action_moved_card_higher",
+      "entities": {
+        "card": {
+          "type": "card",
+          "id": "6a4d2405e660574bf08d2ceb",
+          "pos": 140737487863808,
+          "shortLink": "3L2hkTkG",
+          "text": "MB_July-7-2026-Is-Hamas-finally-surrendering-STAFF324_EN-FR"
+        },
+        "memberCreator": {
+          "type": "member",
+          "id": "68278b84ccf8dea810949333",
+          "username": "langopsbot",
+          "text": "LangOpsBot"
+        }
+      }
+    },
+    "memberCreator": {
+      "id": "68278b84ccf8dea810949333",
+      "activityBlocked": false,
+      "avatarHash": "560f0c960e29f43bc927370167c8930e",
+      "avatarUrl": "https://trello-members.s3.amazonaws.com/68278b84ccf8dea810949333/560f0c960e29f43bc927370167c8930e",
+      "fullName": "LangOpsBot",
+      "idMemberReferrer": "5681a5e8f79a5501c321e49e",
+      "initials": "L",
+      "nonPublic": {},
+      "nonPublicAvailable": true,
+      "username": "langopsbot"
+    }
+  },
+  "webhook": {
+    "id": "6a4baabf3c87d5ea0050f567",
+    "description": "Trello LangOps board subscription",
+    "idModel": "5176af831f22073e1e0012e3",
+    "callbackURL": "https://api.pcglangops.com/api/v1/webhooks/trello",
+    "active": true,
+    "consecutiveFailures": 0,
+    "firstConsecutiveFailDate": "None"
+  }
+}

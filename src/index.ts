@@ -1,34 +1,36 @@
-import express, { Request, Response } from 'express'
-import crypto from 'crypto'
+import { Router } from 'express'
+import { TrelloAdapter } from './adapters/trelloAdapter'
+import { TrelloWebhook } from '../types/trello'
 
-import { TrelloAdapter } from './trello'
 
-const app = express()
-const PORT = process.env.PORT || 3000
 
-app.use(express.text({ type: 'application/json' }))
+const router = Router()
 
-app.post("v1/webhooks/trello", (req, res) => {
+router.head("/", (req, res) => {
+    return res.sendStatus(200)
+})
+
+router.post("/webhooks/trello", async (req, res) => {
     const signature = req.headers['x-trello-webhook'] as string
-    const rawBody = req.body as string
-
+    const rawBody = req.body as TrelloWebhook
+    /*
     if (!signature) {
         return res.status(400).send('Missing X-Trello-Webhook header')
     }
 
     const adapter = new TrelloAdapter()
-    const isValid = adapter.verifyTrelloSignature(rawBody, signature)
+    const isValid = adapter.verifySignature(rawBody, signature)
 
     if (!isValid) {
         console.warn(`Unauthorized webhook attempt blocked from IP: ${req.ip}`)
-        return res.status(401).send('Unauthorized: Invalid Signature')
+        return res.status(401).send('Unauthorized: invalid signature')
     }
-
+    */
     res.sendStatus(200)
-
+    const adapter = new TrelloAdapter()
     try {
-        const parsedData = JSON.parse(rawBody);
-        adapter.forward(parsedData)
+        const filtered = adapter.processWebhook(rawBody)
+        console.log(filtered)
         
 
     } catch (parseError) {
@@ -37,6 +39,4 @@ app.post("v1/webhooks/trello", (req, res) => {
 })
 
 
-app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`)
-})
+export default router

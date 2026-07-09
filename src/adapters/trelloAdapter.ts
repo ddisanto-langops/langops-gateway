@@ -140,7 +140,7 @@ export class TrelloAdapter {
         headers.append("CF-Access-Client-Id", this.cfAccessClientId)
         headers.append("CF-Access-Client-Secret", this.cfAccessClientSecret)
 
-        const stringifiedBody = JSON.stringify(body)
+        const stringifiedBody = JSON.stringify(card)
 
         if (actionType === "createCard") {
             const response = await fetch(`${this.apiBasePath}/products/add`,

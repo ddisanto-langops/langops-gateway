@@ -12,7 +12,7 @@ router.head("/", (req, res) => {
 
 router.post("/webhooks/trello", async (req, res) => {
     const signature = req.headers['x-trello-webhook'] as string
-    const rawBody = req.body as TrelloWebhook
+    const rawWebHook = req.body as TrelloWebhook
     /*
     if (!signature) {
         return res.status(400).send('Missing X-Trello-Webhook header')
@@ -29,9 +29,7 @@ router.post("/webhooks/trello", async (req, res) => {
     res.sendStatus(200)
     const adapter = new TrelloAdapter()
     try {
-        const filtered = adapter.processWebhook(rawBody)
-        console.log(filtered)
-        
+        adapter.processWebhook(rawWebHook)
 
     } catch (parseError) {
         console.error('Failed to parse payload JSON after validation:', parseError);

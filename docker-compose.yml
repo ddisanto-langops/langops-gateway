@@ -1,0 +1,7 @@
+services:
+  gateway:
+    build: .
+    ports:
+      - "3500:3500"
+    env_file:
+      - /etc/langops-gateway/secrets.env

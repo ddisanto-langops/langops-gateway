@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import type { TrelloWebhook, RawTrelloCard } from "../../types/trello"
-import { langopsApiBasePath } from "../../subscribers/langopsAPI"
+import { LangOpsApiClient } from "../subscribers/langopsAPI"
 
 export class TrelloAdapter {
 
@@ -9,9 +9,7 @@ export class TrelloAdapter {
     private readonly trelloSecret: string
     private readonly trelloKey: string
     private readonly trelloToken: string
-    private readonly cfAccessClientId: string
-    private readonly cfAccessClientSecret: string
-    protected apiBasePath: string
+    
 
     
 
@@ -21,10 +19,6 @@ export class TrelloAdapter {
         this.trelloSecret = process.env.TRELLO_SECRET ?? ""
         this.trelloKey = process.env.TRELLO_KEY ?? ""
         this.trelloToken = process.env.TRELLO_TOKEN ?? ""
-        this.cfAccessClientId = process.env.CF_ACCESS_CLIENT_ID ?? ""
-        this.cfAccessClientSecret = process.env.CF_ACCESS_CLIENT_SECRET ?? ""
-
-        this.apiBasePath = langopsApiBasePath
 
         
 
@@ -35,7 +29,7 @@ export class TrelloAdapter {
             !this.trelloKey ||
             !this.trelloToken
         ) {
-            throw new TypeError("Cannot init Trello Adapter: missing one or more environment variables.")
+            throw new Error("Cannot init Trello Adapter: missing one or more environment variables.")
         }
     }
 
@@ -130,59 +124,40 @@ export class TrelloAdapter {
 
 
     async processWebhook(webhook: TrelloWebhook) {
-        const actionType = webhook.action.type
-        const cardId = webhook.action.data.card.id
 
+        // Read webhoook
+        const actionType = webhook.action?.type ?? null
+        const cardId = webhook.action?.data?.card?.id ?? null
+
+        // fetch full data from updated card
         const card = await this.getCard(cardId)
 
-        const headers = new Headers()
-        headers.append("Content-Type", "application/json")
-        headers.append("CF-Access-Client-Id", this.cfAccessClientId)
-        headers.append("CF-Access-Client-Secret", this.cfAccessClientSecret)
+        // Set up client for API requests
+        const client = new LangOpsApiClient()
 
-        const stringifiedBody = JSON.stringify(card)
+        
+        // In our standard LangOps-Blackbird workflow, card is copied from template. We also monitor "createCard" action in case a card is created manually.
+        if (actionType === "copyCard" || actionType === "createCard") {
+            client.addProduct(card)
 
-        if (actionType === "createCard") {
-            const response = await fetch(`${this.apiBasePath}/products/add`,
-                {
-                    method: 'POST',
-                    headers: headers,
-                    body: stringifiedBody
+        /*
+         * Applies when checkbox, title or other fields updated on card
+         * The updateCard action also fires when card is archived
+        */ 
+        } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard") {
+            client.editProduct(card)
 
-                }
-            )
-            if (!response.ok) {
-                const message = await response.text()
-                throw new Error(`HTTP ${response.status}: ${message}`)
-            }
-        } else if (actionType === "updateCheckItemStateOnCard") {
-            const response = await fetch(`${this.apiBasePath}/products/edit/${cardId}`,
-                {
-                    method: 'PATCH',
-                    headers: headers,
-                    body: stringifiedBody
-
-                }
-            )
-            if (!response.ok) {
-                const message = await response.text()
-                throw new Error(`HTTP ${response.status}: ${message}`)
-            }
+        
+            // Corresponds to delete (not archive) in Trello
         } else if (actionType === "deleteCard") {
-            const response = await fetch(`${this.apiBasePath}/products/delete/${cardId}`,
-                {
-                    method: "DELETE"
-                }
-            )
-            if (!response.ok) {
-                const message = await response.text()
-                throw new Error(`HTTP ${response.status}: ${message}`)
-            }
+            client.deleteProduct(card)
+        
+        } else {
+            console.log("Webhook action not supported")
         }
-
-        // Card archived?
-
-
+        
+            
+       
 
     }
 

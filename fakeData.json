@@ -136,7 +136,7 @@
         "url": "https://app.butlerfortrello.com/assets/icon-butler-bot.png"
       }
     },
-    "type": "updateCard",
+    "type": "createCard",
     "date": "2026-07-08T19:47:44.922Z",
     "limits": "None",
     "display": {

@@ -168,11 +168,25 @@ export class TrelloAdapter {
                 const message = await response.text()
                 throw new Error(`HTTP ${response.status}: ${message}`)
             }
+        } else if (actionType === "deleteCard") {
+            const response = await fetch(`${this.apiBasePath}/products/delete/${cardId}`,
+                {
+                    method: "DELETE"
+                }
+            )
+            if (!response.ok) {
+                const message = await response.text()
+                throw new Error(`HTTP ${response.status}: ${message}`)
+            }
         }
+
+        // Card archived?
+
+
 
     }
 
-
+    
 
 
 

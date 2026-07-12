@@ -33,7 +33,7 @@ export class TrelloAdapter {
         }
     }
 
-    verifySignature(rawBody: string, signature: string): boolean | undefined {
+    public verifySignature(rawBody: string, signature: string): boolean | undefined {
         const content = rawBody + this.callbackUrl;
         if (this.trelloSecret) {
             const computedSignature = crypto
@@ -41,7 +41,6 @@ export class TrelloAdapter {
             .update(content)
             .digest('base64');
 
-        // Use timingSafeEqual to guard against timing attacks
         const compare = crypto.timingSafeEqual(
             Buffer.from(signature),
             Buffer.from(computedSignature)
@@ -52,7 +51,7 @@ export class TrelloAdapter {
         
     }
 
-    async getCard(id: string): Promise<RawTrelloCard> {
+    public async getCard(id: string): Promise<RawTrelloCard> {
         const response = await fetch(
             `https://api.trello.com/1/cards/${id}?key=${this.trelloKey}&token=${this.trelloToken}&fields=name,dateLastActivity,due,url,dateClosed&actions=all&attachments=true&attachment_fields=all&customFieldItems=true`, {
                 headers: {
@@ -66,7 +65,7 @@ export class TrelloAdapter {
     }
 
 
-    async getActiveCards(since?: string): Promise<RawTrelloCard[]> {
+    public async getActiveCards(since?: string): Promise<RawTrelloCard[]> {
         /**
          * Fetches all cards on the board (specified by Trello Board ID)
          * where the card is not archived (i.e. dateClosed property is null).
@@ -98,7 +97,7 @@ export class TrelloAdapter {
     }
 
 
-    async getArchivedCards(since?: string): Promise<RawTrelloCard[]> {
+    public async getArchivedCards(since?: string): Promise<RawTrelloCard[]> {
         
         const date = new Date();
         date.setDate(date.getDate() -1)
@@ -123,7 +122,7 @@ export class TrelloAdapter {
     }
 
 
-    async processWebhook(webhook: TrelloWebhook) {
+    public async processWebhook(webhook: TrelloWebhook) {
 
         // Read webhoook
         const actionType = webhook.action?.type ?? null
@@ -155,16 +154,5 @@ export class TrelloAdapter {
         } else {
             console.log("Webhook action not supported")
         }
-        
-            
-       
-
-    }
-
-    
-
-
-
-
-    
+    }  
 }

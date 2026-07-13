@@ -19,7 +19,7 @@ router.post("/webhooks/trello", async (req, res) => {
     }
 
     const adapter = new TrelloAdapter()
-    const isValid = adapter.verifySignature(String(rawWebHook), signature)
+    const isValid = adapter.verifySignature(JSON.stringify(rawWebHook), signature)
 
     if (!isValid) {
         console.warn(`Unauthorized webhook attempt blocked from IP: ${req.ip}`)

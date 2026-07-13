@@ -39,14 +39,14 @@ export class TrelloAdapter {
             const computedSignature = crypto
             .createHmac('sha1', this.trelloSecret)
             .update(content)
-            .digest('base64');
+            .digest('base64')
+        
+            const sigBuf = Buffer.from(signature);
+            const computedBuf = Buffer.from(computedSignature);
 
-        const compare = crypto.timingSafeEqual(
-            Buffer.from(signature),
-            Buffer.from(computedSignature)
-        );
+            if (sigBuf.length !== computedBuf.length) return false;
 
-        return compare
+            return crypto.timingSafeEqual(sigBuf, computedBuf);
         }
         
     }

@@ -7,10 +7,13 @@ const app = express()
 const PORT = Number(process.env.PORT) || 3200
 
 app.use(helmet())
+
 app.use(cors({
   origin: "localhost"
 }))
+
 app.use(express.json())
+
 app.use(router)
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {

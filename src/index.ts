@@ -28,10 +28,10 @@ router.post("/webhooks/trello", async (req, res) => {
     
     
     try {
-        adapter.processWebhook(rawWebHook)
+        await adapter.processWebhook(rawWebHook)
 
     } catch (parseError) {
-        console.error('Failed to parse payload JSON after validation:', parseError);
+        console.log('Failed to parse payload JSON after validation:', parseError);
     }
     res.sendStatus(200)
 })

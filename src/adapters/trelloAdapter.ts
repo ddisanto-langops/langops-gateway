@@ -66,36 +66,45 @@ export class TrelloAdapter {
 
 
     public async processWebhook(webhook: TrelloWebhook) {
+        try {
+            // Read webhoook
+            const actionType = webhook.action?.type ?? null
+            const cardId = webhook.action?.data?.card?.id ?? null
 
-        // Read webhoook
-        const actionType = webhook.action?.type ?? null
-        const cardId = webhook.action?.data?.card?.id ?? null
+            // fetch full data from updated card
+            const card = await this.getCard(cardId)
 
-        // fetch full data from updated card
-        const card = await this.getCard(cardId)
+            // Set up client for API requests
+            const client = new LangOpsApiClient()
 
-        // Set up client for API requests
-        const client = new LangOpsApiClient()
+            
+            // In our standard LangOps-Blackbird workflow, card is copied from template. We also monitor "createCard" action in case a card is created manually.
+            if (actionType === "copyCard" || actionType === "createCard") {
+                await client.addProduct(card)
 
+            /*
+            * Applies when checkbox, title or other fields updated on card
+            * The updateCard action also fires when card is archived
+            */ 
+            } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard") {
+                await client.editProduct(card)
+
+            
+            // Corresponds to delete (not archive) in Trello
+            } else if (actionType === "deleteCard") {
+                await client.deleteProduct(card)
+            
+            } else {
+                console.log("Webhook action not supported")
+            }
         
-        // In our standard LangOps-Blackbird workflow, card is copied from template. We also monitor "createCard" action in case a card is created manually.
-        if (actionType === "copyCard" || actionType === "createCard") {
-            client.addProduct(card)
-
-        /*
-         * Applies when checkbox, title or other fields updated on card
-         * The updateCard action also fires when card is archived
-        */ 
-        } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard") {
-            client.editProduct(card)
-
-        
-        // Corresponds to delete (not archive) in Trello
-        } else if (actionType === "deleteCard") {
-            client.deleteProduct(card)
-        
-        } else {
-            console.log("Webhook action not supported")
-        }
-    }  
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error(error.message); // Safely typed as string
+                console.error(error.stack);   // Safely typed as string or undefined
+            } else {
+                console.error("An unexpected error occurred:", error)
+            }
+        }  
+   }
 }

@@ -14,7 +14,7 @@ export class TrelloAdapter {
     
 
     constructor() {
-        this.callbackUrl = process.env.CALLBACK_URL ?? ""
+        this.callbackUrl = process.env.TRELLO_CALLBACK_URL ?? ""
         this.trelloBoardId = process.env.TRELLO_BOARD_ID ?? ""
         this.trelloSecret = process.env.TRELLO_SECRET ?? ""
         this.trelloKey = process.env.TRELLO_KEY ?? ""

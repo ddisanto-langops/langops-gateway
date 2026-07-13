@@ -147,7 +147,7 @@ export class TrelloAdapter {
             client.editProduct(card)
 
         
-            // Corresponds to delete (not archive) in Trello
+        // Corresponds to delete (not archive) in Trello
         } else if (actionType === "deleteCard") {
             client.deleteProduct(card)
         

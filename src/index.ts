@@ -6,7 +6,7 @@ import { TrelloWebhook } from '../types/trello.js'
 
 const router = Router()
 
-router.head("/", (req, res) => {
+router.head("/webhooks/trello", (req, res) => {
     return res.sendStatus(200)
 })
 

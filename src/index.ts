@@ -26,7 +26,7 @@ router.post("/webhooks/trello", async (req, res) => {
         return res.status(401).send('Unauthorized: invalid signature')
     }
     
-    
+    console.log(`Received valid webhook. IP: ${req.ip} | Status: ${req.statusCode} | Contents: ${req.body}`)
     try {
         await adapter.processWebhook(rawWebHook)
 

@@ -70,6 +70,7 @@ export class TrelloAdapter {
             // Read webhoook
             const actionType = webhook.action?.type ?? null
             const cardId = webhook.action?.data?.card?.id ?? null
+            const cardName = webhook.action?.data?.card?.name ?? null
 
             // fetch full data from updated card
             const card = await this.getCard(cardId)
@@ -81,6 +82,7 @@ export class TrelloAdapter {
             // In our standard LangOps-Blackbird workflow, card is copied from template. We also monitor "createCard" action in case a card is created manually.
             if (actionType === "copyCard" || actionType === "createCard") {
                 await client.addProduct(card)
+                console.log(`Created: ${cardName}`)
 
             /*
             * Applies when checkbox, title or other fields updated on card
@@ -88,14 +90,15 @@ export class TrelloAdapter {
             */ 
             } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard") {
                 await client.editProduct(card)
-
+                console.log(`Edited: ${cardName}`)
             
             // Corresponds to delete (not archive) in Trello
             } else if (actionType === "deleteCard") {
                 await client.deleteProduct(card)
+                console.log(`Deleted: ${cardName}`)
             
             } else {
-                console.log("Webhook action not supported")
+                console.log(`Webhook action not supported: ${actionType}`)
             }
         
         } catch (error: unknown) {

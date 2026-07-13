@@ -1,4 +1,4 @@
-import type { RawTrelloCard } from "../../types/trello"
+import type { RawTrelloCard } from "../../types/trello.js"
 
 
 

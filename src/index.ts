@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { TrelloAdapter } from './adapters/trelloAdapter'
-import { TrelloWebhook } from '../types/trello'
+import { TrelloAdapter } from './adapters/trelloAdapter.js'
+import { TrelloWebhook } from '../types/trello.js'
 
 
 

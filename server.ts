@@ -23,4 +23,4 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 app.use(errorHandler)
 
-app.listen(PORT, () => console.log(`server running on port ${PORT}`))
+app.listen(PORT, () => console.log(`server running on port ${PORT} in docker`))

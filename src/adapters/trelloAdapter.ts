@@ -9,9 +9,6 @@ export class TrelloAdapter {
     private readonly trelloSecret: string
     private readonly trelloKey: string
     private readonly trelloToken: string
-    
-
-    
 
     constructor() {
         this.callbackUrl = process.env.TRELLO_CALLBACK_URL ?? ""
@@ -19,8 +16,6 @@ export class TrelloAdapter {
         this.trelloSecret = process.env.TRELLO_SECRET ?? ""
         this.trelloKey = process.env.TRELLO_KEY ?? ""
         this.trelloToken = process.env.TRELLO_TOKEN ?? ""
-
-        
 
         if (
             !this.callbackUrl ||
@@ -88,7 +83,7 @@ export class TrelloAdapter {
             * Applies when checkbox, title or other fields updated on card
             * The updateCard action also fires when card is archived
             */ 
-            } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard") {
+            } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard" || actionType === "updateCustomFieldItem") {
                 await client.editProduct(card)
                 console.log(`Edited: ${cardName}`)
             

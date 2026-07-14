@@ -1,0 +1,15 @@
+services:
+  gateway:
+    build:
+      context: .
+      target: development
+    command: npm run dev
+    
+    ports:
+      - "3500:3500"
+    volumes:
+      - .:/app
+      - gateway-node-modules:/app/node_modules
+
+volumes:
+  gateway-node-modules:

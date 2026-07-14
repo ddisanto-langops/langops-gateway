@@ -26,12 +26,13 @@ router.post("/webhooks/trello", async (req, res) => {
         return res.status(401).send('Unauthorized: invalid signature')
     }
     
-    console.log(`Received valid webhook. IP: ${req.ip} | Status: ${req.statusCode} | Contents: ${JSON.stringify(req.body)}`)
+    const timestamp = Date.now()
+    console.log(`${timestamp} | IP: ${req.ip} | Status: ${req.statusCode} | Contents: ${JSON.stringify(req.body)}`)
     try {
         await adapter.processWebhook(rawWebHook)
 
     } catch (parseError) {
-        console.log('Failed to parse payload JSON after validation:', parseError);
+        console.log('Failed to parse webhook JSON after validation:', parseError);
     }
     res.sendStatus(200)
 })

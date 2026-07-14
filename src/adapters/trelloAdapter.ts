@@ -92,6 +92,12 @@ export class TrelloAdapter {
                 await client.editProduct(card)
                 console.log(`Edited: ${cardName}`)
             
+            // Usually attachments are links
+            } else if (actionType === "addAttachmentToCard") {
+                await client.editProduct(card)
+                console.log(`Edited: ${cardName}`)
+            
+            
             // Corresponds to delete (not archive) in Trello
             } else if (actionType === "deleteCard") {
                 await client.deleteProduct(card)

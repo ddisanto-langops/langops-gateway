@@ -74,7 +74,8 @@ export class LangOpsApiClient {
         const id = trelloCard.id
         const response = await fetch(`${this.basePath}/products/delete/${id}`,
                 {
-                    method: "DELETE"
+                    method: "DELETE",
+                    headers: this.headers
                 }
             )
             if (!response.ok) {

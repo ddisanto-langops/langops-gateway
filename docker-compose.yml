@@ -3,14 +3,24 @@ services:
     build: .
     ports:
       - "3500:3500"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-files: "3"
     env_file:
       - /etc/langops-gateway/secrets.env
-  
+
   redis:
     image: redis:7-alpine
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-files: "3"
     env_file:
       - /etc/langops-gateway/secrets.env
 

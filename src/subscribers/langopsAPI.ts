@@ -1,4 +1,5 @@
-import type { RawTrelloCard } from "../../types/trello.js"
+import { RawTrelloCard } from "../../types/trello.js"
+import { FailedWebhook } from "../../types/LangOpsAPI.js"
 
 
 
@@ -72,5 +73,18 @@ export class LangOpsApiClient {
                 }
             )
         return response.status
-    }   
+    }
+    
+    public async logFailedWebhook(opereation: string, trelloCard: RawTrelloCard) {
+        const failedWebhook: FailedWebhook = {
+            operation: opereation,
+            data: trelloCard
+        }
+        const response = await fetch(`${this.basePath}`, {
+            method: "POST",
+            headers: this.headers,
+            body: JSON.stringify(failedWebhook)
+        })
+        return response.status
+    }
 }

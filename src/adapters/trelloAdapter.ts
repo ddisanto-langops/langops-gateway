@@ -87,6 +87,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
+                        await client.logFailedWebhook("create", card)
                         console.log(`Add product returned status ${res}.`)
                 }
 
@@ -107,6 +108,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
+                        await client.logFailedWebhook("edit", card)
                         console.log(`Edit product returned status ${res}.`)
                 }
                 
@@ -125,6 +127,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
+                        await client.logFailedWebhook("edit", card)
                         console.log(`Edit product returned status ${res}.`)
                 }
             
@@ -138,6 +141,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
+                        await client.logFailedWebhook("delete", card)
                         console.log(`Delete product returned status ${res}.`)
                 }
             }

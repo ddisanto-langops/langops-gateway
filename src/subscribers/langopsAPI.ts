@@ -42,10 +42,6 @@ export class LangOpsApiClient {
 
                 }
             )
-            if (!response.ok) {
-                const message = await response.text()
-                throw new Error(`HTTP ${response.status}: ${message}`)
-            }
         return response.status
     }
 
@@ -63,10 +59,6 @@ export class LangOpsApiClient {
 
                 }
             )
-            if (!response.ok) {
-                const message = await response.text()
-                throw new Error(`HTTP ${response.status}: ${message}`)
-            }
         return response.status
     }
 
@@ -78,10 +70,6 @@ export class LangOpsApiClient {
                     headers: this.headers
                 }
             )
-            if (!response.ok) {
-                const message = await response.text()
-                throw new Error(`HTTP ${response.status}: ${message}`)
-            }
         return response.status
     }   
 }

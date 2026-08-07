@@ -10,19 +10,3 @@ services:
         max-file: "3"
     env_file:
       - /etc/langops-gateway/secrets.env
-
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis-data:/data
-    command: redis-server --appendonly yes
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    env_file:
-      - /etc/langops-gateway/secrets.env
-
-volumes:
-  redis-data:

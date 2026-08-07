@@ -64,6 +64,11 @@ export class TrelloAdapter {
         try {
             // Read webhoook
             const actionType = webhook.action?.type ?? null
+            if (!actionType) {
+                console.error("Trello webhook does not specify action type")
+                return
+            }
+
             const cardId = webhook.action?.data?.card?.id ?? null
             const cardName = webhook.action?.data?.card?.name ?? null
 
@@ -87,7 +92,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        await client.logFailedWebhook("create", card)
+                        const logRes = await client.logFailedWebhook("create", card)
                         console.log(`Add product returned status ${res}.`)
                 }
 

@@ -80,7 +80,7 @@ export class LangOpsApiClient {
             operation: opereation,
             data: trelloCard
         }
-        const response = await fetch(`${this.basePath}`, {
+        const response = await fetch(`${this.basePath}/products/webhooks/failures`, {
             method: "POST",
             headers: this.headers,
             body: JSON.stringify(failedWebhook)

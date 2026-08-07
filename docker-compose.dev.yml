@@ -1,5 +1,7 @@
 services:
   gateway:
+    env_file:
+      - /etc/langops-gateway/secrets.env
     build:
       context: .
       target: development

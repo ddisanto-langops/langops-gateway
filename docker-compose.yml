@@ -7,7 +7,7 @@ services:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-files: "3"
+        max-file: "3"
     env_file:
       - /etc/langops-gateway/secrets.env
 
@@ -20,7 +20,7 @@ services:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-files: "3"
+        max-file: "3"
     env_file:
       - /etc/langops-gateway/secrets.env
 

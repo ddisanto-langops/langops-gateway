@@ -74,7 +74,11 @@ export class TrelloAdapter {
             const client = new LangOpsApiClient()
 
             
-            // In our standard LangOps-Blackbird workflow, card is copied from template. We also monitor "createCard" action in case a card is created manually.
+            /*
+            *   In our standard LangOps-Blackbird workflow, new cards are copied from templates. 
+            *   When a Blackbird flight fails to create a Trello card, it is created manually.
+            *   For this reason we also monitor the "createCard" action.
+            */ 
             if (actionType === "copyCard" || actionType === "createCard") {
                 const res = await client.addProduct(card)
                 switch (res) {
@@ -87,8 +91,8 @@ export class TrelloAdapter {
                 }
 
             /*
-            * Applies when checkbox, title or other fields updated on card
-            * The updateCard action also fires when card is archived
+            *   Applies when checkbox, title or other fields updated on card
+            *   The updateCard action also fires when card is archived
             */ 
             } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard" || actionType === "updateCustomFieldItem") {
                 const res = await client.editProduct(card)
@@ -97,7 +101,7 @@ export class TrelloAdapter {
                         console.log(`Edited: ${cardName}`)
                         break
                     
-                    case 404:
+                    case 404: // if not found, try to create the product
                         await client.addProduct(card)
                         console.log(`Created: ${cardName}`)
                         break

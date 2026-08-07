@@ -3,6 +3,11 @@ import type { RawTrelloCard } from "../../types/trello.js"
 
 
 export class LangOpsApiClient {
+    /*
+    *   API requires application/json to be set for request body.
+    *   All methods simply return the response's status code, and let the Adapter decide what to do next.
+    */
+
     readonly basePath: string
     private readonly cfAccessClientId: string
     private readonly cfAccessClientSecret: string
@@ -27,11 +32,8 @@ export class LangOpsApiClient {
         this.headers.append("CF-Access-Client-Secret", this.cfAccessClientSecret)
     }
 
-    /**
-     * addProduct
-     * trelloCard: RawTrelloCard     
-    */
-    public async addProduct(trelloCard: RawTrelloCard) {
+
+    public async addProduct(trelloCard: RawTrelloCard): Promise<number> {
 
         const stringifiedBody = JSON.stringify([trelloCard]) // the add products endpoint expects an array
             const response = await fetch(`${this.basePath}/products/add`,
@@ -45,9 +47,7 @@ export class LangOpsApiClient {
         return response.status
     }
 
-    /**
-     * editProduct
-     */
+    
     public async editProduct(trelloCard: RawTrelloCard) {
         const id = trelloCard.id
         const stringifiedBody = JSON.stringify(trelloCard)
@@ -62,6 +62,7 @@ export class LangOpsApiClient {
         return response.status
     }
 
+    // NOTE: This is the soft-delete endpoint
     public async deleteProduct(trelloCard: RawTrelloCard) {
         const id = trelloCard.id
         const response = await fetch(`${this.basePath}/products/delete/${id}`,

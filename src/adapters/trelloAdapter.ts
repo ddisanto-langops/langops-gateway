@@ -76,36 +76,73 @@ export class TrelloAdapter {
             
             // In our standard LangOps-Blackbird workflow, card is copied from template. We also monitor "createCard" action in case a card is created manually.
             if (actionType === "copyCard" || actionType === "createCard") {
-                await client.addProduct(card)
-                console.log(`Created: ${cardName}`)
+                const res = await client.addProduct(card)
+                switch (res) {
+                    case 201: 
+                        console.log(`Created: ${cardName}`)
+                        break
+                    
+                    default:
+                        console.log(`Add product returned status ${res}.`)
+                }
 
             /*
             * Applies when checkbox, title or other fields updated on card
             * The updateCard action also fires when card is archived
             */ 
             } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard" || actionType === "updateCustomFieldItem") {
-                await client.editProduct(card)
-                console.log(`Edited: ${cardName}`)
+                const res = await client.editProduct(card)
+                switch (res) {
+                    case 200:
+                        console.log(`Edited: ${cardName}`)
+                        break
+                    
+                    case 404:
+                        await client.addProduct(card)
+                        console.log(`Created: ${cardName}`)
+                        break
+                    
+                    default:
+                        console.log(`Edit product returned status ${res}.`)
+                }
+                
             
             // Usually attachments are links
             } else if (actionType === "addAttachmentToCard") {
-                await client.editProduct(card)
-                console.log(`Edited: ${cardName}`)
+                const res = await client.editProduct(card)
+                switch (res) {
+                    case 200:
+                        console.log(`Edited: ${cardName}`)
+                        break
+                    
+                    case 404:
+                        await client.addProduct(card)
+                        console.log(`Created: ${cardName}`)
+                        break
+                    
+                    default:
+                        console.log(`Edit product returned status ${res}.`)
+                }
             
             
             // Corresponds to delete (not archive) in Trello
             } else if (actionType === "deleteCard") {
-                await client.deleteProduct(card)
-                console.log(`Deleted: ${cardName}`)
-            
-            } else {
-                console.log(`Webhook action not supported: ${actionType}`)
+                const res = await client.deleteProduct(card)
+                switch (res) {
+                    case 200:
+                        console.log(`Deleted: ${cardName}`)
+                        break
+                    
+                    default:
+                        console.log(`Delete product returned status ${res}.`)
+                }
             }
+            
         
         } catch (error: unknown) {
             if (error instanceof Error) {
-                console.error(error.message); // Safely typed as string
-                console.error(error.stack);   // Safely typed as string or undefined
+                console.error(error.message)
+                console.error(error.stack) 
             } else {
                 console.error("An unexpected error occurred:", error)
             }

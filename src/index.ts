@@ -27,7 +27,7 @@ router.post("/webhooks/trello", async (req, res) => {
     }
     
     const timestamp = Date.now()
-    console.log(`${timestamp} | IP: ${req.ip} | Status: ${req.statusCode} | Contents: ${JSON.stringify(req.body)}`)
+    console.log(`${timestamp} | IP: ${req.ip} | Status: ${req.statusCode}`)
     try {
         await adapter.processWebhook(rawWebHook)
 

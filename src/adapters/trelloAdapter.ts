@@ -93,7 +93,7 @@ export class TrelloAdapter {
                     
                     default:
                         const logRes = await client.logFailedWebhook("create", card)
-                        console.log(`Add product returned status ${res}.`)
+                        console.log(`Logged failure sending data to subscriber. 'Add product' returned status ${res}.`)
                 }
 
             /*
@@ -114,7 +114,7 @@ export class TrelloAdapter {
                     
                     default:
                         await client.logFailedWebhook("edit", card)
-                        console.log(`Edit product returned status ${res}.`)
+                        console.log(`Logged failure sending data to subscriber. 'Edit product' returned status ${res}.`)
                 }
                 
             
@@ -133,7 +133,7 @@ export class TrelloAdapter {
                     
                     default:
                         await client.logFailedWebhook("edit", card)
-                        console.log(`Edit product returned status ${res}.`)
+                        console.log(`Logged failure sending data to subscriber. 'Edit product' returned status ${res}.`)
                 }
             
             
@@ -147,7 +147,7 @@ export class TrelloAdapter {
                     
                     default:
                         await client.logFailedWebhook("delete", card)
-                        console.log(`Delete product returned status ${res}.`)
+                        console.log(`Logged failure sending data to subscriber. 'Delete product' returned status ${res}.`)
                 }
             }
             

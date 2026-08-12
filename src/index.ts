@@ -25,7 +25,15 @@ router.post("/webhooks/trello", async (req, res) => {
         console.warn(`Unauthorized request blocked from IP: ${req.ip}`)
         return res.status(401).send('Unauthorized: invalid signature')
     }
-    const dateFormat = Intl.DateTimeFormat("en-US")
+    const dateFormat = new Intl.DateTimeFormat("sv-SE", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    })
     const timestamp = dateFormat.format(new Date())
     console.log(`${timestamp} | IP: ${req.ip} | Status: ${res.statusCode}`)
     try {

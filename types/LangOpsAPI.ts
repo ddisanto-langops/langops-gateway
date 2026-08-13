@@ -1,6 +1,6 @@
-import { RawTrelloCard } from "./trello.js"
+import { TrelloWebhook } from "./trello.js"
 
 export interface FailedWebhook {
     operation: string,
-    data: RawTrelloCard
+    data: TrelloWebhook
 }

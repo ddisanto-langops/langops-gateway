@@ -72,9 +72,6 @@ export class TrelloAdapter {
             const cardId = webhook.action?.data?.card?.id ?? null
             const cardName = webhook.action?.data?.card?.name ?? null
 
-            // fetch full data from updated card
-            const card = await this.getCard(cardId)
-
             // Set up client for API requests
             const client = new LangOpsApiClient()
 
@@ -85,6 +82,7 @@ export class TrelloAdapter {
             *   For this reason we also monitor the "createCard" action.
             */ 
             if (actionType === "copyCard" || actionType === "createCard") {
+                const card = await this.getCard(cardId)
                 const res = await client.addProduct(card)
                 switch (res) {
                     case 201: 
@@ -92,7 +90,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        const logRes = await client.logFailedWebhook("create", card)
+                        const logRes = await client.logFailedWebhook("create", webhook)
                         console.log(`Add product returned status ${res}.`)
                 }
 
@@ -101,6 +99,7 @@ export class TrelloAdapter {
             *   The updateCard action also fires when card is archived
             */ 
             } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard" || actionType === "updateCustomFieldItem") {
+                const card = await this.getCard(cardId)
                 const res = await client.editProduct(card)
                 switch (res) {
                     case 200:
@@ -113,13 +112,14 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        await client.logFailedWebhook("edit", card)
+                        await client.logFailedWebhook("edit", webhook)
                         console.log(`Edit product returned status ${res}.`)
                 }
                 
             
             // Usually attachments are links
             } else if (actionType === "addAttachmentToCard") {
+                const card = await this.getCard(cardId)
                 const res = await client.editProduct(card)
                 switch (res) {
                     case 200:
@@ -132,21 +132,21 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        await client.logFailedWebhook("edit", card)
+                        await client.logFailedWebhook("edit", webhook)
                         console.log(`Edit product returned status ${res}.`)
                 }
             
             
             // Corresponds to delete (not archive) in Trello
             } else if (actionType === "deleteCard") {
-                const res = await client.deleteProduct(card)
+                const res = await client.deleteProduct(cardId)
                 switch (res) {
                     case 200:
                         console.log(`Deleted: ${cardName}`)
                         break
                     
                     default:
-                        await client.logFailedWebhook("delete", card)
+                        await client.logFailedWebhook("delete", webhook)
                         console.log(`Delete product returned status ${res}.`)
                 }
             }

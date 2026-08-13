@@ -1,5 +1,6 @@
-import { RawTrelloCard } from "../../types/trello.js"
+import { RawTrelloCard, TrelloWebhook } from "../../types/trello.js"
 import { FailedWebhook } from "../../types/LangOpsAPI.js"
+
 
 
 
@@ -64,8 +65,7 @@ export class LangOpsApiClient {
     }
 
     // NOTE: This is the soft-delete endpoint
-    public async deleteProduct(trelloCard: RawTrelloCard) {
-        const id = trelloCard.id
+    public async deleteProduct(id: string) {
         const response = await fetch(`${this.basePath}/products/delete/${id}`,
                 {
                     method: "DELETE",
@@ -74,11 +74,12 @@ export class LangOpsApiClient {
             )
         return response.status
     }
+
     
-    public async logFailedWebhook(opereation: string, trelloCard: RawTrelloCard) {
+    public async logFailedWebhook(opereation: string, data: TrelloWebhook) {
         const failedWebhook: FailedWebhook = {
             operation: opereation,
-            data: trelloCard
+            data: data
         }
         const response = await fetch(`${this.basePath}/products/webhooks/failures`, {
             method: "POST",

@@ -22,12 +22,20 @@ router.post("/webhooks/trello", async (req, res) => {
     const isValid = adapter.verifySignature(JSON.stringify(rawWebHook), signature)
 
     if (!isValid) {
-        console.warn(`Unauthorized webhook attempt blocked from IP: ${req.ip}`)
+        console.warn(`Unauthorized request blocked from IP: ${req.ip}`)
         return res.status(401).send('Unauthorized: invalid signature')
     }
-    
-    const timestamp = Date.now()
-    console.log(`${timestamp} | IP: ${req.ip} | Status: ${req.statusCode} | Contents: ${JSON.stringify(req.body)}`)
+    const dateFormat = new Intl.DateTimeFormat("sv-SE", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    })
+    const timestamp = dateFormat.format(new Date())
+    console.log(`${timestamp} | IP: ${req.ip} | Status: ${res.statusCode}`)
     try {
         await adapter.processWebhook(rawWebHook)
 

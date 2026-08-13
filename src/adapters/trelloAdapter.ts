@@ -75,7 +75,6 @@ export class TrelloAdapter {
 
             // Set up client for API requests
             const client = new LangOpsApiClient()
-
             
             /*
             *   In our standard LangOps-Blackbird workflow, new cards are copied from templates. 
@@ -84,22 +83,16 @@ export class TrelloAdapter {
             */ 
             if (actionType === "copyCard" || actionType === "createCard") {
                 const card = await this.getCard(cardId)
-                const res = await client.addProduct(card)
-                switch (res) {
-                    case 201: 
-                        console.log(`Created: ${cardName}`)
-                        break
-                    
-                    default:
-                        const logRes = await client.logFailedWebhook("create", webhook)
-                        if (logRes === 200) {
-                            console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
-                        } else {
-                            console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
-                        }
-                        
-                }
-
+                const response = await client.addProduct(card)
+                if (response.ok) {
+                    console.log(`Created: ${cardName}`)
+                } else {
+                    const logRes = await client.logFailedWebhook("create", webhook)
+                    if (logRes.ok) {
+                        console.log(`Logged failure sending webhook to subscriber: status ${response}.`)
+                    } else {
+                        console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
+                    }}
             /*
             *   Applies when checkbox, title or other fields updated on card
             *   The updateCard action also fires when card is archived
@@ -107,7 +100,7 @@ export class TrelloAdapter {
             } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard" || actionType === "updateCustomFieldItem") {
                 const card = await this.getCard(cardId)
                 const res = await client.editProduct(card)
-                switch (res) {
+                switch (res.status) {
                     case 200:
                         console.log(`Edited: ${cardName}`)
                         break
@@ -119,7 +112,7 @@ export class TrelloAdapter {
                     
                     default:
                         const logRes = await client.logFailedWebhook("edit", webhook)
-                        if (logRes === 200) {
+                        if (logRes.status === 201) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {
                             console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
@@ -131,7 +124,7 @@ export class TrelloAdapter {
             } else if (actionType === "addAttachmentToCard") {
                 const card = await this.getCard(cardId)
                 const res = await client.editProduct(card)
-                switch (res) {
+                switch (res.status) {
                     case 200:
                         console.log(`Edited: ${cardName}`)
                         break
@@ -143,7 +136,7 @@ export class TrelloAdapter {
                     
                     default:
                         const logRes = await client.logFailedWebhook("edit", webhook)
-                        if (logRes === 200) {
+                        if (logRes.status === 200) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {
                             console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
@@ -154,14 +147,14 @@ export class TrelloAdapter {
             // Corresponds to delete (not archive) in Trello
             } else if (actionType === "deleteCard") {
                 const res = await client.deleteProduct(cardId)
-                switch (res) {
+                switch (res.status) {
                     case 200:
                         console.log(`Deleted: ${cardName}`)
                         break
                     
                     default:
                         const logRes = await client.logFailedWebhook("delete", webhook)
-                        if (logRes === 200) {
+                        if (logRes.status === 200) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {
                             console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)

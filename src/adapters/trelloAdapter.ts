@@ -1,6 +1,7 @@
 import crypto from "crypto"
 import type { TrelloWebhook, RawTrelloCard } from "../../types/trello.js"
 import { LangOpsApiClient } from "../subscribers/langopsAPI.js"
+import { log } from "console"
 
 export class TrelloAdapter {
 
@@ -91,7 +92,12 @@ export class TrelloAdapter {
                     
                     default:
                         const logRes = await client.logFailedWebhook("create", webhook)
-                        console.log(`Add product returned status ${res}.`)
+                        if (logRes === 200) {
+                            console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
+                        } else {
+                            console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
+                        }
+                        
                 }
 
             /*
@@ -112,8 +118,12 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        await client.logFailedWebhook("edit", webhook)
-                        console.log(`Edit product returned status ${res}.`)
+                        const logRes = await client.logFailedWebhook("edit", webhook)
+                        if (logRes === 200) {
+                            console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
+                        } else {
+                            console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
+                        }
                 }
                 
             
@@ -132,8 +142,12 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        await client.logFailedWebhook("edit", webhook)
-                        console.log(`Edit product returned status ${res}.`)
+                        const logRes = await client.logFailedWebhook("edit", webhook)
+                        if (logRes === 200) {
+                            console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
+                        } else {
+                            console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
+                        }
                 }
             
             
@@ -146,8 +160,12 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        await client.logFailedWebhook("delete", webhook)
-                        console.log(`Delete product returned status ${res}.`)
+                        const logRes = await client.logFailedWebhook("delete", webhook)
+                        if (logRes === 200) {
+                            console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
+                        } else {
+                            console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
+                        }
                 }
             }
             

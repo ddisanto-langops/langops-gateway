@@ -86,7 +86,7 @@ export class TrelloAdapter {
                 if (response.ok) {
                     console.log(`Created: ${cardName}`)
                 } else {
-                    const logRes = await client.logFailedWebhook("create", webhook)
+                    const logRes = await client.logFailedWebhook(response.statusText, webhook)
                     if (logRes.ok) {
                         console.log(`Logged failure sending webhook to subscriber: status ${response}.`)
                     } else {
@@ -110,7 +110,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        const logRes = await client.logFailedWebhook("edit", webhook)
+                        const logRes = await client.logFailedWebhook(res.statusText, webhook)
                         if (logRes.status === 201) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {
@@ -134,7 +134,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        const logRes = await client.logFailedWebhook("edit", webhook)
+                        const logRes = await client.logFailedWebhook(res.statusText, webhook)
                         if (logRes.status === 200) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {
@@ -152,7 +152,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        const logRes = await client.logFailedWebhook("delete", webhook)
+                        const logRes = await client.logFailedWebhook(res.statusText, webhook)
                         if (logRes.status === 200) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {

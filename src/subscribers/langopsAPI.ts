@@ -76,9 +76,9 @@ export class LangOpsApiClient {
     }
 
     
-    public async logFailedWebhook(opereation: string, data: TrelloWebhook) {
+    public async logFailedWebhook(statusCode: string, data: TrelloWebhook) {
         const failedWebhook: FailedWebhook = {
-            operation: opereation,
+            statusCode: statusCode,
             data: data
         }
         const response = await fetch(`${this.basePath}/products/webhooks/failures`, {

@@ -1,7 +1,6 @@
 import crypto from "crypto"
 import type { TrelloWebhook, RawTrelloCard } from "../../types/trello.js"
 import { LangOpsApiClient } from "../subscribers/langopsAPI.js"
-import { log } from "console"
 
 export class TrelloAdapter {
 

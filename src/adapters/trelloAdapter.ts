@@ -114,7 +114,7 @@ export class TrelloAdapter {
                         if (logRes.status === 201) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {
-                            console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
+                            console.log(`Error logging failure to communicate with subscriber: status ${logRes.status}`)
                         }
                 }
                 
@@ -138,7 +138,7 @@ export class TrelloAdapter {
                         if (logRes.status === 200) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {
-                            console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
+                            console.log(`Error logging failure to communicate with subscriber: status ${logRes.status}`)
                         }
                 }
             
@@ -156,7 +156,7 @@ export class TrelloAdapter {
                         if (logRes.status === 200) {
                             console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
                         } else {
-                            console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
+                            console.log(`Error logging failure to communicate with subscriber: status ${logRes.status}`)
                         }
                 }
             }

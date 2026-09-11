@@ -81,7 +81,7 @@ export class LangOpsApiClient {
             statusCode: statusCode,
             data: data
         }
-        const response = await fetch(`${this.basePath}/products/webhooks/failures`, {
+        const response = await fetch(`${this.basePath}/webhooks/failures`, {
             method: "POST",
             headers: this.headers,
             body: JSON.stringify(failedWebhook)

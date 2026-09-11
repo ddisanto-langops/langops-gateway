@@ -112,9 +112,9 @@ export class TrelloAdapter {
                     default:
                         const logRes = await client.logFailedWebhook(res.statusText, webhook)
                         if (logRes.status === 201) {
-                            console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
+                            console.log(`Successfully logged subscriber error. Request had status ${res.status}.`)
                         } else {
-                            console.log(`Error logging failure to communicate with subscriber: status ${logRes.status}`)
+                            console.log(`Failed to log subscriber error. API returned status ${logRes.status}`)
                         }
                 }
                 

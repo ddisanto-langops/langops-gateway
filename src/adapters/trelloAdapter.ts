@@ -88,7 +88,7 @@ export class TrelloAdapter {
                 } else {
                     const logRes = await client.logFailedWebhook(response.statusText, webhook)
                     if (logRes.ok) {
-                        console.log(`Logged failure sending webhook to subscriber: status ${response}.`)
+                        console.log(`Logged failure sending webhook to subscriber: status ${response.statusText}.`)
                     } else {
                         console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
                     }}
@@ -136,7 +136,7 @@ export class TrelloAdapter {
                     default:
                         const logRes = await client.logFailedWebhook(res.statusText, webhook)
                         if (logRes.status === 200) {
-                            console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
+                            console.log(`Logged failure sending webhook to subscriber: status ${res.statusText}.`)
                         } else {
                             console.log(`Error logging failure to communicate with subscriber: status ${logRes.status}`)
                         }
@@ -154,7 +154,7 @@ export class TrelloAdapter {
                     default:
                         const logRes = await client.logFailedWebhook(res.statusText, webhook)
                         if (logRes.status === 200) {
-                            console.log(`Logged failure sending webhook to subscriber: status ${res}.`)
+                            console.log(`Logged failure sending webhook to subscriber: status ${res.statusText}.`)
                         } else {
                             console.log(`Error logging failure to communicate with subscriber: status ${logRes.status}`)
                         }

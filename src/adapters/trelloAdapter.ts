@@ -28,7 +28,7 @@ export class TrelloAdapter {
         }
     }
 
-    public verifySignature(rawBody: string, signature: string): boolean | undefined {
+    public verifySignature(rawBody: string, signature: string): boolean {
         const content = rawBody + this.callbackUrl;
         if (this.trelloSecret) {
             const computedSignature = crypto
@@ -42,8 +42,9 @@ export class TrelloAdapter {
             if (sigBuf.length !== computedBuf.length) return false;
 
             return crypto.timingSafeEqual(sigBuf, computedBuf);
+        } else {
+            return false
         }
-        
     }
 
     public async getCard(id: string): Promise<RawTrelloCard> {

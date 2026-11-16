@@ -57,7 +57,7 @@ export class TrelloAdapter {
             }
         )
         if (!response.ok) {
-            console.error(`Faild to get card ${id}`)
+            console.error(`Failed to get card ${id}`)
             return
         } else {
             const card: RawTrelloCard = await response.json() as RawTrelloCard
@@ -108,18 +108,22 @@ export class TrelloAdapter {
                 switch (response.status) {
                     case 200:
                         console.log(`Edited: ${cardName}`)
-                    
+                        break
+
                     case 404: // if not found, try to create the product
-                        const editResponse = await client.addProduct(card)
-                        if (editResponse.ok) {
+                        console.log(`Card '${cardName}' not found, attempting to create...`)
+                        const createResponse = await client.addProduct(card)
+                        if (createResponse.ok) {
                             console.log(`Created: ${cardName}`)
                         } else {
-                            console.log(`Failed to create new card: client returned status ${editResponse.status} for card ${cardName}.`)
+                            console.log(`Failed to create new card: client returned status ${createResponse.status} for card ${cardName}.`)
                             await client.logInvalidRequest(response.statusText, webhook)
                         }
+                        break
                     
                     default:
                         await client.logInvalidRequest(response.statusText, webhook)
+                        break
                 }
                 
             
@@ -164,8 +168,8 @@ export class TrelloAdapter {
         
         } catch (error: unknown) {
             if (error instanceof Error) {
-                console.error(error.message)
-                console.error(error.stack) 
+                console.error(`Error processing card: ${error.message}`)
+                console.error(`Traceback: ${error.stack}`) 
             } else {
                 console.error("An unexpected error occurred:", error)
             }

@@ -1,17 +1,18 @@
 services:
   gateway:
-    env_file:
-      - /etc/langops-gateway/secrets.env
-    build:
-      context: .
-      target: development
-    command: npm run dev
-    
+    build: .
     ports:
       - "3500:3500"
-    volumes:
-      - .:/app
-      - gateway-node-modules:/app/node_modules
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    env_file:
+      - .env.dev
+    networks:
+      - langops-dev
 
-volumes:
-  gateway-node-modules:
+networks:
+  langops-dev:
+    external: true

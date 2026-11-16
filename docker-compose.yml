@@ -9,4 +9,4 @@ services:
         max-size: "10m"
         max-file: "3"
     env_file:
-      - /etc/langops-gateway/secrets.env
+      - .env

@@ -1,19 +1,26 @@
 # LangOps Gateway
-This is the LangOps Gateway server app. It is meant as a centralized location where data intended for LangOps products is fetched from third party sources, then fed to the LangOps API (or other subscribers) as JSON.
+The LangOps Gateway handles contracts between third parties and internal tools such as APIs. It validates webhooks and calls upstream services.
 
-## Scopes
-The LangOps Gateway handles several data contracts:
-- Reception of webhooks from third parties, and their validation
-- Subsequent fetching of more data from third parties, based on domain logic
-- Transfer of that data to a subscriber, e.g. API
+## Key Concepts
+- **Route**: An exposed endpoint (in this case, using Express.js) which receives webhooks.
+- **Adapter**: Class that is called when a webhook is received; handles validation, data enrichment, and decides which subscriber methods to call
+- **Subscriber**: Class that defines the contract between the "adapter" and an upstream service, e.g. an API, by exposing methods to the adapter
+
+## Environment Variables
+**The following variables must be set:**  
+`PORT`: Port to expose  
+*Trello*  
+`TRELLO_BOARD_ID`: Defines the board to fetch data from  
+`TRELLO_KEY`: Required for authentication  
+`TRELLO_TOKEN`: Required for authentication  
+`TRELLO_SECRET`: Required for authentication  
+`TRELLO_CALLBACK_URL`: Required for webhook signature verification  
+*LangOps API*
+`BASEPATH`: Where to find the API  
+`CF_ACCESS_CLIENT_ID`: Required for API authentication  
+`CF_ACCESS_CLIENT_SECRET`: Required for API authentication
 
 ## Example Workflow (Trello -> LangOps API)
 1) A webook is received from Trello
 2) The Trello card ID and action type are extracted from the webhook
-3) A function is called to fetch the entire card
-4) The JSON of the card is sent to the appropriate subscriber endpoint
-
-## Key Concepts
-- **Route**: An exposed endpoint (in this case, using Express.js) which third-party data (i.e. webhooks) can be sent to. Some webhook services require validation at time of creation, so a HEAD route is provided. 
-- **Adapter**: Class that handles reception or fetching of third-party data (e.g. Trello cards) via class methods
-- **Subscriber**: Class that handles transfer of the adapter's data to another service, e.g. the LangOps ApI
+3) The Trello adapter fetches more data and decides what upstream service and methods to call  

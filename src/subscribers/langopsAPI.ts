@@ -1,5 +1,5 @@
 import { RawTrelloCard, TrelloWebhook } from "../../types/trello.js"
-import { FailedWebhook } from "../../types/LangOpsAPI.js"
+import { LoggedWebhook } from "../../types/LangOpsAPI.js"
 
 
 
@@ -18,7 +18,7 @@ export class LangOpsApiClient {
     constructor() {
         this.cfAccessClientId = process.env.CF_ACCESS_CLIENT_ID ?? ""
         this.cfAccessClientSecret = process.env.CF_ACCESS_CLIENT_SECRET ?? ""
-        this.basePath = "https://api.pcglangops.com/api/v1"
+        this.basePath = process.env.BASEPATH ?? ""
 
         if (
             !this.cfAccessClientId ||
@@ -76,16 +76,25 @@ export class LangOpsApiClient {
     }
 
     
-    public async logFailedWebhook(statusCode: string, data: TrelloWebhook) {
-        const failedWebhook: FailedWebhook = {
+    public async logInvalidRequest(statusCode: string, webhook: TrelloWebhook) {
+        const loggedWebhook: LoggedWebhook = {
             statusCode: statusCode,
-            data: data
+            data: webhook
         }
         const response = await fetch(`${this.basePath}/webhooks/failures`, {
             method: "POST",
             headers: this.headers,
-            body: JSON.stringify(failedWebhook)
+            body: JSON.stringify(loggedWebhook)
         })
-        return response
+        if (response.ok) {
+            console.log(`Logged API error: status ${response.status}.`)
+        } else {
+            console.log(
+                `Failed to log API error. 
+                \nAPI status: ${statusCode}
+                \nInitial request status: ${response.status}
+                \nCard name: ${webhook.action.data.card.name}
+            `)
+        }
     }
 }

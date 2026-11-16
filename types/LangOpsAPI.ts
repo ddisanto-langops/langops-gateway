@@ -1,6 +1,6 @@
 import { TrelloWebhook } from "./trello.js"
 
-export interface FailedWebhook {
+export interface LoggedWebhook {
     statusCode: string,
     data: TrelloWebhook
 }

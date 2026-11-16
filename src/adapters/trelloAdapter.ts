@@ -47,7 +47,7 @@ export class TrelloAdapter {
         }
     }
 
-    public async getCard(id: string): Promise<RawTrelloCard> {
+    public async getCard(id: string): Promise<RawTrelloCard | undefined> {
         const response = await fetch(
             `https://api.trello.com/1/cards/${id}?key=${this.trelloKey}&token=${this.trelloToken}&fields=name,dateLastActivity,due,url,dateClosed&actions=all&attachments=true&attachment_fields=all&customFieldItems=true`, {
                 headers: {
@@ -56,8 +56,13 @@ export class TrelloAdapter {
                 method: 'GET'
             }
         )
-        const card: RawTrelloCard = await response.json() as RawTrelloCard
-        return card
+        if (!response.ok) {
+            console.error(`Faild to get card ${id}`)
+            return
+        } else {
+            const card: RawTrelloCard = await response.json() as RawTrelloCard
+            return card
+        }
     }
 
 
@@ -65,100 +70,94 @@ export class TrelloAdapter {
         try {
             // Read webhoook
             const actionType = webhook.action?.type ?? null
-            if (!actionType) {
-                console.error("Trello webhook does not specify action type")
-                return
-            }
-
             const cardId = webhook.action?.data?.card?.id ?? null
             const cardName = webhook.action?.data?.card?.name ?? null
+
+            if (!actionType || !cardId || !cardName) {
+                console.error("Ignoring malformed Trello webhook: missing action type, ID or name.")
+                return
+            }
 
             // Set up client for API requests
             const client = new LangOpsApiClient()
             
             /*
-            *   In our standard LangOps-Blackbird workflow, new cards are copied from templates. 
-            *   When a Blackbird flight fails to create a Trello card, it is created manually.
+            *   In our standard Blackbird workflow, new cards are copied from templates. 
+            *   If a Blackbird flight fails to create a Trello card, it is created manually.
             *   For this reason we also monitor the "createCard" action.
             */ 
             if (actionType === "copyCard" || actionType === "createCard") {
                 const card = await this.getCard(cardId)
+                if (!card) return
+                
                 const response = await client.addProduct(card)
                 if (response.ok) {
                     console.log(`Created: ${cardName}`)
                 } else {
-                    const logRes = await client.logFailedWebhook(response.statusText, webhook)
-                    if (logRes.ok) {
-                        console.log(`Logged failure sending webhook to subscriber: status ${response.statusText}.`)
-                    } else {
-                        console.log(`Error logging failure to communicate with subscriber: status ${logRes}`)
-                    }}
+                    await client.logInvalidRequest(response.statusText, webhook)
+                }
             /*
             *   Applies when checkbox, title or other fields updated on card
             *   The updateCard action also fires when card is archived
             */ 
             } else if (actionType === "updateCheckItemStateOnCard" || actionType === "updateCard" || actionType === "updateCustomFieldItem") {
                 const card = await this.getCard(cardId)
-                const res = await client.editProduct(card)
-                switch (res.status) {
+                if (!card) return
+
+                const response = await client.editProduct(card)
+                switch (response.status) {
                     case 200:
                         console.log(`Edited: ${cardName}`)
-                        break
                     
                     case 404: // if not found, try to create the product
-                        await client.addProduct(card)
-                        console.log(`Created: ${cardName}`)
-                        break
+                        const editResponse = await client.addProduct(card)
+                        if (editResponse.ok) {
+                            console.log(`Created: ${cardName}`)
+                        } else {
+                            console.log(`Failed to create new card: client returned status ${editResponse.status} for card ${cardName}.`)
+                            await client.logInvalidRequest(response.statusText, webhook)
+                        }
                     
                     default:
-                        const logRes = await client.logFailedWebhook(res.statusText, webhook)
-                        if (logRes.status === 201) {
-                            console.log(`Successfully logged subscriber error. Request had status ${res.status}.`)
-                        } else {
-                            console.log(`Failed to log subscriber error. API returned status ${logRes.status}`)
-                        }
+                        await client.logInvalidRequest(response.statusText, webhook)
                 }
                 
             
             // Usually attachments are links
             } else if (actionType === "addAttachmentToCard") {
                 const card = await this.getCard(cardId)
-                const res = await client.editProduct(card)
-                switch (res.status) {
+                if (!card) return
+
+                const response = await client.editProduct(card)
+                switch (response.status) {
                     case 200:
                         console.log(`Edited: ${cardName}`)
                         break
                     
-                    case 404:
-                        await client.addProduct(card)
-                        console.log(`Created: ${cardName}`)
+                    case 404: // try to add the product if not found
+                        const editResponse = await client.addProduct(card)
+                        if (editResponse.ok) {
+                            console.log(`Created: ${cardName}`)
+                        } else {
+                            await client.logInvalidRequest(response.statusText, webhook)
+                        }
                         break
                     
                     default:
-                        const logRes = await client.logFailedWebhook(res.statusText, webhook)
-                        if (logRes.status === 200) {
-                            console.log(`Logged failure sending webhook to subscriber: status ${res.statusText}.`)
-                        } else {
-                            console.log(`Error logging failure to communicate with subscriber: status ${logRes.status}`)
-                        }
+                        await client.logInvalidRequest(response.statusText, webhook)
                 }
             
             
             // Corresponds to delete (not archive) in Trello
             } else if (actionType === "deleteCard") {
-                const res = await client.deleteProduct(cardId)
-                switch (res.status) {
+                const response = await client.deleteProduct(cardId) // soft-delete in LangOps DB
+                switch (response.status) {
                     case 200:
                         console.log(`Deleted: ${cardName}`)
                         break
                     
                     default:
-                        const logRes = await client.logFailedWebhook(res.statusText, webhook)
-                        if (logRes.status === 200) {
-                            console.log(`Logged failure sending webhook to subscriber: status ${res.statusText}.`)
-                        } else {
-                            console.log(`Error logging failure to communicate with subscriber: status ${logRes.status}`)
-                        }
+                        await client.logInvalidRequest(response.statusText, webhook)
                 }
             }
             

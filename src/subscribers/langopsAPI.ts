@@ -90,10 +90,10 @@ export class LangOpsApiClient {
             console.log(`Logged API error: status ${statusCode}.`)
         } else {
             console.log(
-                `Failed to log API error. 
-                \nAPI status: ${statusCode}
-                \nInitial request status: ${response.status}
-                \nCard name: ${webhook.action.data.card.name}
+                `\nFailed to log API error. 
+                API status: ${statusCode}\n
+                Initial request status: ${response.status}\n
+                Card name: ${webhook.action.data.card.name}\n
             `)
         }
     }

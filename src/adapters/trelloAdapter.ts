@@ -163,15 +163,17 @@ export class TrelloAdapter {
                     default:
                         await client.logInvalidRequest(response.statusText, webhook)
                 }
+            } else {
+                console.log(`Ignored unsupported card action (${cardName}).`)
             }
             
         
         } catch (error: unknown) {
             if (error instanceof Error) {
-                console.error(`Error processing card: ${error.message}`)
+                console.error(`\nError processing card: ${error.message}`)
                 console.error(`Traceback: ${error.stack}`) 
             } else {
-                console.error("An unexpected error occurred:", error)
+                console.error("\nAn unexpected error occurred:", error)
             }
         }  
    }

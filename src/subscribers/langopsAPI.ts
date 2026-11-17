@@ -87,7 +87,7 @@ export class LangOpsApiClient {
             body: JSON.stringify(loggedWebhook)
         })
         if (response.ok) {
-            console.log(`Logged API error: status ${response.status}.`)
+            console.log(`Logged API error: status ${statusCode}.`)
         } else {
             console.log(
                 `Failed to log API error. 

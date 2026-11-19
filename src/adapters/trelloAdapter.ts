@@ -94,7 +94,7 @@ export class TrelloAdapter {
                 if (response.ok) {
                     console.log(`Created: ${cardName}`)
                 } else {
-                    await client.logInvalidRequest(response.statusText, webhook)
+                    await client.logInvalidRequest(response.status.toString(), webhook)
                 }
             /*
             *   Applies when checkbox, title or other fields updated on card
@@ -117,12 +117,12 @@ export class TrelloAdapter {
                             console.log(`Created: ${cardName}`)
                         } else {
                             console.log(`Failed to create new card: client returned status ${createResponse.status} for card ${cardName}.`)
-                            await client.logInvalidRequest(response.statusText, webhook)
+                            await client.logInvalidRequest(response.status.toString(), webhook)
                         }
                         break
                     
                     default:
-                        await client.logInvalidRequest(response.statusText, webhook)
+                        await client.logInvalidRequest(response.status.toString(), webhook)
                         break
                 }
                 
@@ -143,12 +143,12 @@ export class TrelloAdapter {
                         if (editResponse.ok) {
                             console.log(`Created: ${cardName}`)
                         } else {
-                            await client.logInvalidRequest(response.statusText, webhook)
+                            await client.logInvalidRequest(response.status.toString(), webhook)
                         }
                         break
                     
                     default:
-                        await client.logInvalidRequest(response.statusText, webhook)
+                        await client.logInvalidRequest(response.status.toString(), webhook)
                 }
             
             
@@ -161,7 +161,7 @@ export class TrelloAdapter {
                         break
                     
                     default:
-                        await client.logInvalidRequest(response.statusText, webhook)
+                        await client.logInvalidRequest(response.status.toString(), webhook)
                 }
             } else {
                 console.log(`Ignored unsupported card action (${cardName}).`)
